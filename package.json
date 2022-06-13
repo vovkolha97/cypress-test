@@ -4,7 +4,7 @@
   "description": "my first cypress try",
   "main": "index.js",
   "scripts": {
-    "test-ui": "cypress open"
+    "test": "cypress open"
   },
   "author": "",
   "license": "ISC",
