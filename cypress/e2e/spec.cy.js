@@ -9,7 +9,6 @@ const loginAs = (username) => {
   .should("have.value", "secret_sauce");
 
   cy.get('[data-test="login-button"]').click();
-  // check if logout link present
 }
 const logout = () => {
   cy.get('#react-burger-menu-btn').click();
@@ -24,9 +23,13 @@ describe('add items to cart', () => {
  
     cy.get('[data-test="add-to-cart-sauce-labs-backpack"]').click();
     cy.get('#shopping_cart_container').click();
+    cy.url().should('include', '/cart');
+
     cy.get('[data-test="continue-shopping"]').click();
+
     cy.get('[data-test="add-to-cart-sauce-labs-bolt-t-shirt"]').click();
     cy.get('#shopping_cart_container').click();
+    cy.url().should('include', '/cart');
 
     cy.get('[data-test="continue-shopping"]').click();
     logout();
