@@ -1,0 +1,8 @@
+{
+  "standardUser_login": "standard_user",
+  "password": "secret_sauce",
+  "lockedUser_login": "locked_out_user",
+  "Name": "James",
+  "LastName": "Bond",
+  "ZipCode": "zip007"
+}
