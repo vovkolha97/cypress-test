@@ -1,7 +1,7 @@
+
 beforeEach(function () {
-  cy.fixture('exemple').then(function(data) {
+  cy.fixture('testData').then(function(data) {
     this.data = data;
-    cy.log('Data: ', this.data)
   })
 }) 
 
@@ -26,7 +26,7 @@ describe('test set for web automation', () => {
 
     goHome();
 
-    cy.get('[data-test="username"]').type(this.data.standardUser_login);
+    cy.get('[data-test="username"]').type(this.data.standard_user_login);
     cy.get('[data-test="password"]').type(this.data.password);
   
     cy.get('[data-test="login-button"]').click();
@@ -69,7 +69,7 @@ describe('test set for web automation', () => {
   })
    
   it('login as locked_user', function () {
-    cy.get('[data-test="username"]').type(this.data.lockedUser_login);
+    cy.get('[data-test="username"]').type(this.data.locked_user_login);
     cy.get('[data-test="password"]').type(this.data.password);
     cy.get('[data-test="login-button"]').click();
     cy.get('[data-test="error"]');
