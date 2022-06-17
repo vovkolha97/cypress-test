@@ -1,13 +1,8 @@
-
 beforeEach(function () {
-  cy.fixture('testData').then(function(data) {
+  cy.fixture('saucedemo').then(function(data) {
     this.data = data;
   })
 }) 
-
-const goHome = () => {
-  cy.visit('https://www.saucedemo.com/')
-}
 
 const openShoppingCart = () => {
   cy.get('#shopping_cart_container').click();
@@ -22,9 +17,17 @@ const logout = () => {
 
 describe('test set for web automation', () => {
 
-  it('login as standerd_user, add items, logout', function () {
+  it('login as locked_user', function () {
+    cy.visit(this.data.url);
+    cy.get('[data-test="username"]').type(this.data.locked_user_login);
+    cy.get('[data-test="password"]').type(this.data.password);
+    cy.get('[data-test="login-button"]').click();
+    cy.get('[data-test="error"]');
+  }) 
 
-    goHome();
+  it('login as standard_user, add items, logout', function () {
+
+    cy.visit(this.data.url);
 
     cy.get('[data-test="username"]').type(this.data.standard_user_login);
     cy.get('[data-test="password"]').type(this.data.password);
@@ -67,11 +70,4 @@ describe('test set for web automation', () => {
 
     logout();
   })
-   
-  it('login as locked_user', function () {
-    cy.get('[data-test="username"]').type(this.data.locked_user_login);
-    cy.get('[data-test="password"]').type(this.data.password);
-    cy.get('[data-test="login-button"]').click();
-    cy.get('[data-test="error"]');
-  }) 
 })
