@@ -17,16 +17,7 @@ const logout = () => {
 
 describe('test set for web automation', () => {
 
-  it('login as locked_user', function () {
-    cy.visit(this.data.url);
-    cy.get('[data-test="username"]').type(this.data.locked_user_login);
-    cy.get('[data-test="password"]').type(this.data.password);
-    cy.get('[data-test="login-button"]').click();
-    cy.get('[data-test="error"]');
-  }) 
-
   it('login as standard_user, add items, logout', function () {
-
     cy.visit(this.data.url);
 
     cy.get('[data-test="username"]').type(this.data.standard_user_login);
@@ -36,38 +27,57 @@ describe('test set for web automation', () => {
     cy.url().should('include', '/inventory');
 
     cy.get('[data-test="add-to-cart-sauce-labs-backpack"]').click();
-    cy.get('.inventory_item .inventory_item_price:eq(0)')
-    cy.get('.shopping_cart_badge');
-    cy.get('[data-test="remove-sauce-labs-backpack"]');
 
-    openShoppingCart();
-    cy.get('.cart_item .inventory_item_price:eq(0)')
-    //add checking of total amount
-    cy.get('[data-test="continue-shopping"]').click()
+    cy.get('.inventory_item .inventory_item_price:eq(0)')
+    .invoke('text').as('firstItemPrice')
+    .then(() => {
+      cy.get('.shopping_cart_badge');
+      cy.get('[data-test="remove-sauce-labs-backpack"]');
   
+      openShoppingCart();
+      cy.get('.cart_item .inventory_item_price:eq(0)') //check first item price
+      .invoke('text')
+      .should('eq', this.firstItemPrice)
+      cy.get('[data-test="continue-shopping"]').click()
+    })
 
     cy.get('[data-test="add-to-cart-sauce-labs-bolt-t-shirt"]').click();
-    cy.get('.inventory_item .inventory_item_price:eq(3)')
-    cy.get('.shopping_cart_badge');
-    cy.get('[data-test="remove-sauce-labs-bolt-t-shirt"]');
+    cy.get('.inventory_item .inventory_item_price:eq(2)')
+    .invoke('text').as('secondItemPrice')
+    .then(() => {
+      cy.get('.shopping_cart_badge');
+      cy.get('[data-test="remove-sauce-labs-bolt-t-shirt"]');
+  
+      openShoppingCart();
+      cy.get('.cart_item .inventory_item_price:eq(0)') //check both items price
+      .invoke('text')
+      .should('eq', this.firstItemPrice)
+      cy.get('.cart_item .inventory_item_price:eq(1)')
+      .invoke('text')
+      .should('eq', this.secondItemPrice)
+  
+      cy.get('[data-test="checkout"]').click();
+      cy.url().should('include', '/checkout-step-one')
+  
+      cy.get('[data-test="firstName"]').type(this.data.Name)
+      cy.get('[data-test="lastName"]').type(this.data.LastName)
+      cy.get('[data-test="postalCode"]').type(this.data.ZipCode)
+  
+      cy.get('[data-test="continue"]').click()
+      cy.url().should('include', '/checkout-step-two')
 
-    openShoppingCart();
-    cy.get('.cart_item .inventory_item_price:eq(1)')
-    //add checking of total amount
-
-    cy.get('[data-test="checkout"]').click();
-    cy.url().should('include', '/checkout-step-one')
-
-    cy.get('[data-test="firstName"]').type(this.data.Name)
-    cy.get('[data-test="lastName"]').type(this.data.LastName)
-    cy.get('[data-test="postalCode"]').type(this.data.ZipCode)
-
-    cy.get('[data-test="continue"]').click()
-    cy.url().should('include', '/checkout-step-two')
-    //add checking of total amount
-    cy.get('[data-test="finish"]').click()
-    cy.url().should('include', '/checkout-complete')
-
+      //add checking of total amount
+      cy.get('[data-test="finish"]').click()
+      cy.url().should('include', '/checkout-complete')
+    })
     logout();
   })
+
+  it('login as locked_user', function () {
+    cy.visit(this.data.url);
+    cy.get('[data-test="username"]').type(this.data.locked_user_login);
+    cy.get('[data-test="password"]').type(this.data.password);
+    cy.get('[data-test="login-button"]').click();
+    cy.get('[data-test="error"]');
+  }) 
 })
